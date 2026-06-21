@@ -1,0 +1,858 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>The Rebel Painters — A Story About Impressionism</title>
+<style>
+  :root{
+    --ink:#241f1a; --paper:#f4ecdb; --paper2:#efe5d0;
+    --night:#0e1838; --cobalt:#2a4bd7; --cad:#f4b400; --viridian:#1f8f6a;
+    --vermilion:#e1492e; --cerulean:#2e9bd6; --violet:#6a4c9c;
+    --shadow:rgba(20,15,10,.18);
+    --serif:"Iowan Old Style","Palatino Linotype",Palatino,Georgia,"Times New Roman",serif;
+    --sans:system-ui,-apple-system,"Segoe UI",Roboto,Helvetica,Arial,sans-serif;
+  }
+  *{box-sizing:border-box}
+  html{scroll-behavior:smooth}
+  body{margin:0;color:var(--ink);background:var(--paper);
+    font-family:var(--sans);font-size:clamp(17px,1.4vw,21px);line-height:1.6;-webkit-text-size-adjust:100%}
+  img{display:block}
+
+  /* nav */
+  .nav{position:sticky;top:0;z-index:40;background:linear-gradient(#241f1a,#2e2620);
+    box-shadow:0 6px 20px rgba(0,0,0,.28);display:flex;align-items:center;gap:.5rem;
+    padding:.55rem .7rem;overflow-x:auto;-webkit-overflow-scrolling:touch;scrollbar-width:none}
+  .nav::-webkit-scrollbar{display:none}
+  .nav .lead{color:#f4ecdb;font-family:var(--serif);font-weight:700;font-size:.95rem;white-space:nowrap;padding-left:.2rem;opacity:.85;flex:0 0 auto}
+  .blob{flex:0 0 auto;display:inline-flex;align-items:center;gap:.45rem;text-decoration:none;color:#fff;
+    font-weight:650;font-size:.92rem;white-space:nowrap;padding:.4rem .8rem .4rem .45rem;border-radius:999px;
+    background:rgba(255,255,255,.06);border:1px solid rgba(255,255,255,.10);transition:transform .12s,background .12s}
+  .blob:hover,.blob:focus-visible{background:rgba(255,255,255,.16);transform:translateY(-1px);outline:none}
+  .blob i{width:18px;height:18px;border-radius:50%;background:var(--c);
+    box-shadow:inset 0 0 0 2px rgba(255,255,255,.35),0 1px 3px rgba(0,0,0,.4);flex:0 0 auto}
+
+  /* bands */
+  .band{padding:clamp(2.4rem,6vw,5rem) clamp(1.1rem,5vw,3rem);position:relative}
+  .wrap{max-width:1100px;margin:0 auto}
+  .band--paper{background:var(--paper)} .band--paper2{background:var(--paper2)}
+  .band--night{background:radial-gradient(120% 90% at 80% -10%,#22356a 0%,var(--night) 60%);color:#f1ecdf}
+  .band--gold{background:linear-gradient(160deg,#f7e7b8,#f1d589)}
+  .band--salon{background:linear-gradient(160deg,#efe7d6,#e7dcc2)}
+
+  /* type */
+  .eyebrow{display:inline-flex;align-items:center;gap:.6rem;font-weight:800;letter-spacing:.16em;
+    text-transform:uppercase;font-size:.74rem;margin:0 0 .7rem}
+  .eyebrow .step{font-family:var(--serif);font-size:1rem;letter-spacing:0;color:#fff;background:var(--c,#241f1a);
+    width:2.1rem;height:2.1rem;border-radius:50%;display:inline-grid;place-items:center;box-shadow:0 2px 6px var(--shadow)}
+  h1{font-family:var(--serif);font-weight:800;line-height:1.02;margin:.2rem 0;font-size:clamp(2.6rem,8vw,5.5rem);letter-spacing:-.01em}
+  h2{font-family:var(--serif);font-weight:800;line-height:1.05;margin:.1rem 0 1rem;font-size:clamp(1.9rem,4.6vw,3.2rem);letter-spacing:-.01em}
+  h3{font-family:var(--serif);font-weight:800;margin:.2rem 0 .4rem;font-size:clamp(1.3rem,2.6vw,1.8rem)}
+  .lede{font-size:clamp(1.05rem,1.7vw,1.32rem);max-width:48ch}
+  .band--night .lede{color:#e9e3d3}
+  p{margin:.7rem 0;max-width:60ch}
+  .say{font-family:var(--serif);font-style:italic;font-size:1.08em}
+  mark{background:linear-gradient(transparent 55%,var(--cad) 55%);padding:0 .12em;border-radius:2px;color:inherit}
+  .band--night mark{background:linear-gradient(transparent 55%,rgba(244,180,0,.55) 55%)}
+
+  .read{border-left:6px solid var(--c,var(--vermilion));background:rgba(255,255,255,.55);
+    padding:.9rem 1.1rem;border-radius:0 12px 12px 0;margin:1.1rem 0;max-width:60ch;box-shadow:0 6px 18px var(--shadow)}
+  .band--night .read{background:rgba(255,255,255,.08)}
+  .read .tag{font-weight:800;font-size:.72rem;letter-spacing:.14em;text-transform:uppercase;opacity:.7;display:block;margin-bottom:.2rem}
+
+  /* art */
+  figure.zoomable{margin:0;cursor:zoom-in;position:relative}
+  .frame{background:#fbf7ee;padding:.7rem;border-radius:6px;
+    box-shadow:0 10px 30px var(--shadow),0 1px 0 rgba(255,255,255,.6) inset;border:1px solid rgba(120,90,50,.25)}
+  .frame img{width:100%;height:auto;border-radius:3px}
+  figure.zoomable figcaption{font-size:.85rem;margin-top:.55rem;opacity:.85;text-align:center;font-family:var(--serif);font-style:italic}
+  .zoomhint{position:absolute;top:1.05rem;right:1.05rem;background:rgba(20,15,10,.72);color:#fff;
+    font-size:.66rem;font-weight:700;letter-spacing:.06em;padding:.25rem .5rem;border-radius:999px;pointer-events:none}
+  .dl-note{display:none;align-items:center;justify-content:center;text-align:center;min-height:170px;
+    background:repeating-linear-gradient(45deg,#efe6d4,#efe6d4 12px,#e7dcc4 12px,#e7dcc4 24px);
+    border-radius:3px;padding:1rem;font-size:.85rem;color:#6b5a40;font-weight:600}
+
+  .split{display:grid;grid-template-columns:1fr;gap:clamp(1.3rem,3vw,2.6rem);align-items:center}
+  @media(min-width:820px){.split{grid-template-columns:1.05fr .95fr}.split.flip>*:first-child{order:2}}
+  .cards{display:grid;gap:1.4rem;grid-template-columns:repeat(auto-fit,minmax(min(100%,280px),1fr));margin-top:1.6rem}
+  .card{background:#fbf7ee;border-radius:14px;padding:1rem;box-shadow:0 8px 24px var(--shadow);border-top:6px solid var(--c)}
+  .card .nick{font-size:.78rem;font-weight:800;letter-spacing:.1em;text-transform:uppercase;color:var(--c)}
+  .card ul{margin:.5rem 0 0;padding-left:1.05rem} .card li{margin:.3rem 0}
+  .three{display:grid;gap:1.2rem;grid-template-columns:repeat(auto-fit,minmax(min(100%,240px),1fr));margin-top:1.5rem}
+  .gallery{display:grid;gap:1.3rem;grid-template-columns:repeat(auto-fit,minmax(min(100%,260px),1fr));margin-top:1.6rem}
+  .facts{background:#fbf7ee;border-radius:14px;padding:1rem 1.15rem;box-shadow:0 8px 24px var(--shadow);border-left:8px solid var(--c,var(--cobalt));margin-top:1rem}
+  .band--night .facts{background:rgba(255,255,255,.07)}
+  .facts ul{margin:.3rem 0 0;padding-left:1.1rem} .facts li{margin:.4rem 0}
+  .portrait .frame{max-width:420px;margin:0 auto}
+  .epithet{font-family:var(--serif);font-style:italic;font-size:1.05rem;opacity:.85;margin:.1rem 0 .6rem}
+
+  .btns{display:flex;flex-wrap:wrap;gap:.6rem;margin:1.1rem 0}
+  .btn{display:inline-flex;align-items:center;gap:.5rem;text-decoration:none;font-weight:700;font-size:.92rem;
+    padding:.6rem .95rem;border-radius:999px;background:var(--ink);color:#fbf7ee;box-shadow:0 4px 14px var(--shadow);transition:transform .12s}
+  .btn:hover{transform:translateY(-1px)}
+  .btn.alt{background:#fff;color:var(--ink);border:1.5px solid rgba(36,31,26,.25)}
+  .band--night .btn.alt{background:rgba(255,255,255,.1);color:#fbf7ee;border-color:rgba(255,255,255,.3)}
+  .net{font-size:.66rem;font-weight:800;letter-spacing:.08em;text-transform:uppercase;background:var(--cerulean);color:#04243a;padding:.12rem .42rem;border-radius:999px}
+
+  .stairs{display:grid;gap:.55rem;margin-top:1.4rem}
+  .stair{display:flex;align-items:center;gap:1rem;background:#fbf7ee;border-radius:12px;padding:.85rem 1rem;box-shadow:0 6px 18px var(--shadow);border-left:10px solid var(--c)}
+  .stair b{font-family:var(--serif);font-size:1.15rem}
+  .stair .n{font-family:var(--serif);font-weight:800;color:#fff;background:var(--c);width:2.2rem;height:2.2rem;border-radius:8px;display:grid;place-items:center;flex:0 0 auto}
+  .oneliner{font-family:var(--serif);font-style:italic;font-size:1.2rem;margin-top:1.2rem;text-align:center}
+
+  .pick{display:grid;gap:.8rem;grid-template-columns:repeat(auto-fit,minmax(min(100%,220px),1fr));margin-top:1.4rem}
+  .pick div{background:rgba(255,255,255,.08);border:1px solid rgba(255,255,255,.16);border-radius:12px;padding:1rem}
+  .pick b{font-family:var(--serif);font-size:1.2rem;display:block;margin-bottom:.2rem;color:var(--c)}
+
+  /* lightbox */
+  .lightbox{position:fixed;inset:0;z-index:90;background:#0b0d14;display:none;align-items:center;justify-content:center;touch-action:none;overscroll-behavior:contain}
+  .lightbox.open{display:flex}
+  #zoomPane{transform-origin:center center;will-change:transform;cursor:grab;user-select:none}
+  #zoomPane:active{cursor:grabbing}
+  #zoomPane img{max-width:94vw;max-height:84vh;width:auto;height:auto;pointer-events:none}
+  .lb-bar{position:fixed;top:0;left:0;right:0;display:flex;align-items:center;gap:.5rem;padding:.7rem .9rem;background:linear-gradient(#000a,#0000);color:#fff}
+  .lb-cap{font-family:var(--serif);font-style:italic;font-size:1rem;margin-right:auto;max-width:60vw;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+  .lb-btn{width:3rem;height:3rem;border-radius:50%;border:none;cursor:pointer;background:rgba(255,255,255,.14);color:#fff;font-size:1.3rem;font-weight:700;display:grid;place-items:center}
+  .lb-btn:hover{background:rgba(255,255,255,.26)}
+  .lb-hint{position:fixed;bottom:1rem;left:0;right:0;text-align:center;color:#fff9;font-size:.82rem;pointer-events:none}
+
+  .totop{position:fixed;right:1rem;bottom:1rem;z-index:50;background:var(--ink);color:#fbf7ee;border:none;border-radius:999px;
+    padding:.7rem 1rem;font-weight:700;font-size:.9rem;cursor:pointer;box-shadow:0 8px 22px rgba(0,0,0,.3);display:flex;align-items:center;gap:.45rem}
+  .totop i{width:14px;height:14px;border-radius:50%;background:conic-gradient(var(--cad),var(--vermilion),var(--cobalt),var(--viridian),var(--cad))}
+  .foot{font-size:.85rem;opacity:.75;text-align:center;padding:2rem 1rem 3rem}
+  @media (prefers-reduced-motion:reduce){html{scroll-behavior:auto}*{transition:none!important}}
+</style>
+</head>
+<body id="top">
+
+<nav class="nav" aria-label="Jump to a section">
+  <span class="lead">Jump to</span>
+  <a class="blob" style="--c:var(--violet)"   href="#music"><i></i>Music</a>
+  <a class="blob" style="--c:#b9a079"          href="#before"><i></i>Before</a>
+  <a class="blob" style="--c:var(--cobalt)"    href="#rebels"><i></i>The Rebels</a>
+  <a class="blob" style="--c:var(--cad)"        href="#monet"><i></i>Monet</a>
+  <a class="blob" style="--c:var(--vermilion)"  href="#vangogh"><i></i>Van Gogh</a>
+  <a class="blob" style="--c:var(--viridian)"   href="#seurat"><i></i>Seurat</a>
+  <a class="blob" style="--c:var(--cerulean)"   href="#degas"><i></i>Degas</a>
+  <a class="blob" style="--c:var(--cad)"       href="#haystacks"><i></i>Haystacks</a>
+  <a class="blob" style="--c:var(--viridian)"  href="#evolution"><i></i>How it grew</a>
+  <a class="blob" style="--c:var(--vermilion)" href="#color"><i></i>Color &amp; tubes</a>
+  <a class="blob" style="--c:var(--cerulean)"  href="#play"><i></i>Your turn</a>
+</nav>
+
+<!-- HERO -->
+<header class="band band--night" id="start">
+  <div class="wrap split">
+    <div>
+      <p class="eyebrow" style="--c:var(--cad)"><span class="step">★</span> An art adventure</p>
+      <h1>The Rebel Painters</h1>
+      <p class="lede">Long ago, painters had to make everything look smooth and perfect, like a photograph. Then a gang of rebels in France decided to paint how a moment <em>feels</em> instead — the light, the wind, the blur of a busy day. People <strong>laughed</strong> at them. Today they're some of the most famous artists who ever lived.</p>
+      <p class="lede" style="opacity:.8">Tap any picture to open it big and zoom right into the real brushstrokes. Use the colored dots at the top to jump around.</p>
+    </div>
+    <figure class="zoomable" data-caption="Vincent van Gogh, The Starry Night (1889) — zoom in to see the real swirling brushstrokes">
+      <div class="frame">
+        <span class="zoomhint">tap to zoom</span>
+        <img src="images/starry-night.jpg" alt="Van Gogh, The Starry Night" loading="eager" onerror="imgFail(this)">
+        <div class="dl-note">Run <b>&nbsp;download_art&nbsp;</b> once (see README) to load the real high-res painting here.</div>
+      </div>
+      <figcaption>Vincent van Gogh, <em>The Starry Night</em> (1889)</figcaption>
+    </figure>
+  </div>
+</header>
+
+<main>
+
+<!-- 1 MUSIC -->
+<section class="band band--night" id="music">
+  <div class="wrap split flip">
+    <figure class="zoomable" data-caption="Hokusai, The Great Wave off Kanagawa — the print Debussy put on the cover of his sea music">
+      <div class="frame">
+        <span class="zoomhint">tap to zoom</span>
+        <img src="images/great-wave.jpg" alt="Hokusai, The Great Wave off Kanagawa" loading="lazy" onerror="imgFail(this)">
+        <div class="dl-note">Run <b>&nbsp;download_art&nbsp;</b> to load this image.</div>
+      </div>
+      <figcaption>Hokusai, <em>The Great Wave off Kanagawa</em> — on Debussy's <em>La Mer</em> cover</figcaption>
+    </figure>
+    <div>
+      <p class="eyebrow" style="--c:var(--violet)"><span class="step">1</span> Press play first</p>
+      <h2>Painting with sound</h2>
+      <p>While the painters were busy rebelling, a French composer named <strong>Claude Debussy</strong> was doing the same thing with music. People often call him the first <em>Impressionist</em> composer.</p>
+      <p>Just like Monet painted <em>light</em> instead of objects, Debussy "painted" with floating, blurry, dreamy sounds. He wanted you to <mark>feel a mood</mark>, not follow a story.</p>
+      <div class="read" style="--c:var(--violet)">
+        <span class="tag">Read aloud</span>
+        When a teacher asked young Debussy what rule he was following, he shocked everyone by answering: <span class="say">"My pleasure."</span> Same rebel spirit as the painters!
+      </div>
+      <p><strong>Cool crossover:</strong> Debussy's sea music <em>La Mer</em> used Hokusai's famous <em>Great Wave</em> print on its cover — the very same Japanese art that inspired painters like Van Gogh.</p>
+      <div class="btns">
+        <a class="btn" href="https://www.youtube.com/results?search_query=debussy+clair+de+lune" target="_blank" rel="noopener">▶ Play "Clair de Lune" <span class="net">needs internet</span></a>
+      </div>
+      <p style="opacity:.8"><em>Tip: start it quietly and let it loop under the whole lesson.</em></p>
+    </div>
+  </div>
+</section>
+
+<!-- 2 BEFORE -->
+<section class="band band--salon" id="before">
+  <div class="wrap split">
+    <div>
+      <p class="eyebrow" style="--c:#b9a079"><span class="step">2</span> Before the rebels</p>
+      <h2>The "perfect" paintings everyone loved</h2>
+      <p>To show your art in France, you had to please <strong>the Salon</strong> — a jury of stern old professors. They liked giant, glassy-smooth paintings of gods, kings, and battles. <mark>No brushstrokes allowed.</mark></p>
+      <p>Cabanel's <em>Birth of Venus</em> (1863) was a smash hit — the Emperor himself bought it. Zoom in: the surface is so smooth you can barely find a brushstroke.</p>
+      <div class="read" style="--c:#b9a079">
+        <span class="tag">Read aloud</span>
+        The writer Émile Zola made fun of how fake-smooth this style was. He said the goddess looked like she was made of <span class="say">"pink and white marzipan."</span>
+      </div>
+      <p><strong>The funny part:</strong> in 1863 so many artists got rejected that they held a "Salon of the Rejected." People came just to <em>laugh</em> at the weird new paintings. Those rejects became the most famous artists in history. 😎</p>
+      <div class="btns">
+        <a class="btn alt" href="https://www.musee-orsay.fr/en/artworks/naissance-de-venus-98" target="_blank" rel="noopener">Cabanel at the Musée d'Orsay <span class="net">needs internet</span></a>
+      </div>
+    </div>
+    <figure class="zoomable" data-caption="Alexandre Cabanel, The Birth of Venus (1863) — zoom in: almost no visible brushstrokes, smooth as marzipan">
+      <div class="frame">
+        <span class="zoomhint">tap to zoom</span>
+        <img src="images/cabanel-birth-of-venus.jpg" alt="Cabanel, The Birth of Venus" loading="lazy" onerror="imgFail(this)">
+        <div class="dl-note">Run <b>&nbsp;download_art&nbsp;</b> to load this image.</div>
+      </div>
+      <figcaption>Alexandre Cabanel, <em>The Birth of Venus</em> (1863) — the smooth Salon style</figcaption>
+    </figure>
+  </div>
+</section>
+
+<!-- 3 REBELS -->
+<section class="band band--paper" id="rebels">
+  <div class="wrap">
+    <p class="eyebrow" style="--c:var(--cobalt)"><span class="step">3</span> Meet the gang</p>
+    <h2>Four rebels, four personalities</h2>
+    <p class="lede">They weren't a perfect team — they were a bunch of stubborn, weird, brilliant individuals. Here's what each one was really like.</p>
+
+    <div class="cards">
+      <div class="card" style="--c:var(--cad)">
+        <span class="nick">The Light Chaser</span><h3>Claude Monet</h3>
+        <ul>
+          <li>Obsessed with <strong>light and time</strong>, not objects.</li>
+          <li>So poor early on he once tried to drown himself in the river — and sometimes couldn't afford paint.</li>
+          <li>Dug a <strong>trench in his garden</strong> so a giant canvas could sink into the ground while he painted.</li>
+          <li>Another painter said of him: <em>"Monet is only an eye — but my God, what an eye!"</em></li>
+        </ul>
+        <div class="btns"><a class="btn alt" href="https://artsandculture.google.com/entity/claude-monet/m01xnj" target="_blank" rel="noopener">Explore Monet <span class="net">net</span></a></div>
+      </div>
+      <div class="card" style="--c:var(--cerulean)">
+        <span class="nick">The Grumpy Spy</span><h3>Edgar Degas</h3>
+        <ul>
+          <li>Loved watching people who <em>didn't know</em> they were being watched — dancers, racehorses.</li>
+          <li>Grouchy loner who never married. Hated the word "Impressionist" — called himself a "Realist."</li>
+          <li>Made roughly <strong>1,500</strong> ballet artworks — but tired, yawning, shoe-fixing dancers, never perfect princesses.</li>
+          <li>When his eyes failed, he switched to chunky pastels and sculpture he could feel.</li>
+        </ul>
+      </div>
+      <div class="card" style="--c:var(--vermilion)">
+        <span class="nick">The Heart on Fire</span><h3>Vincent van Gogh</h3>
+        <ul>
+          <li>Painted <strong>feelings, not facts</strong> — thick swirls squeezed straight from the tube.</li>
+          <li>Barely sold a single painting while alive. Failed as a preacher and an art dealer first.</li>
+          <li>Wrote hundreds of loving letters to his brother Theo, who paid his bills.</li>
+          <li>Made about <strong>2,000 artworks</strong> in just 10 years.</li>
+        </ul>
+        <div class="btns"><a class="btn alt" href="https://www.moma.org/collection/works/79802" target="_blank" rel="noopener">Starry Night at MoMA <span class="net">net</span></a></div>
+      </div>
+      <div class="card" style="--c:var(--viridian)">
+        <span class="nick">The Dot Scientist</span><h3>Georges Seurat</h3>
+        <ul>
+          <li>No blending! Millions of tiny <strong>dots</strong> of pure color — your <em>eye</em> mixes them, like screen pixels.</li>
+          <li>So secretive he hid a girlfriend <em>and</em> a baby from all his friends.</li>
+          <li>Died suddenly at just <strong>31</strong>.</li>
+          <li><em>La Grande Jatte</em> took two years and about 60 practice studies; it's about 10 feet wide.</li>
+        </ul>
+      </div>
+    </div>
+
+    <div class="split" style="margin-top:2.2rem">
+      <figure class="zoomable" data-caption="Seurat, A Sunday on La Grande Jatte (1884–86) — zoom ALL the way in to see the millions of separate dots">
+        <div class="frame">
+          <span class="zoomhint">tap to zoom</span>
+          <img src="images/grande-jatte.jpg" alt="Seurat, A Sunday on La Grande Jatte" loading="lazy" onerror="imgFail(this)">
+          <div class="dl-note">Run <b>&nbsp;download_art&nbsp;</b> to load this image.</div>
+        </div>
+        <figcaption>Seurat, <em>A Sunday on La Grande Jatte</em> (1884–86)</figcaption>
+      </figure>
+      <div>
+        <h3>The dot trick</h3>
+        <p>Cast this big, then zoom <strong>all the way in</strong>: the whole park is built from tiny separate <strong>dots</strong> of pure color. Step back (or walk across the room) and your eyes blend the dots into people, grass and sunshine.</p>
+        <p>Seurat thought this was more <em>scientific</em> and more glowing than mixing paint on a palette. When he first showed it, critics screamed <em>"bedlam!"</em> and <em>"scandal!"</em></p>
+        <p>Tap the painting and zoom right in: those aren't brushstrokes, they're thousands of separate <strong>dots</strong>. Zoom back out and they melt into a sunny afternoon.</p>
+        <div class="btns"><a class="btn alt" href="https://www.artic.edu/artworks/27992/a-sunday-on-la-grande-jatte-1884" target="_blank" rel="noopener">See it at the Art Institute <span class="net">net</span></a></div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- PAINTER GALLERY · MONET -->
+<section class="band band--paper2" id="monet">
+  <div class="wrap">
+    <p class="eyebrow" style="--c:var(--cad)"><span class="step">★</span> Painter up close · The Light Chaser</p>
+    <div class="split">
+      <figure class="zoomable portrait" data-caption="Claude Monet — self-portrait, 1886">
+        <div class="frame"><span class="zoomhint">tap to zoom</span>
+          <img src="images/monet-self-portrait.jpg" alt="Claude Monet self-portrait" loading="lazy" onerror="imgFail(this)">
+          <div class="dl-note">Run <b>&nbsp;download_art&nbsp;</b> to load this image.</div>
+        </div>
+        <figcaption>Claude Monet, <em>self-portrait</em> (1886)</figcaption>
+      </figure>
+      <div>
+        <h2>Claude Monet</h2>
+        <p class="epithet">He chased the light for sixty years.</p>
+        <p class="lede">Monet didn't really paint <em>things</em> — he painted <mark>light</mark>. Give him a haystack, a train station, or a stone cathedral and he'd paint it again and again, just to catch how it looked at sunrise, at noon, and in the fog. People laughed at his blurry style at first. One grumpy critic sneered that it looked like a sloppy "impression," not a real painting, so the whole gang got stuck with the insult as their name forever. Today "Impressionist" is a badge of honour. A fellow painter once said of him: "Monet is only an eye — but my God, what an eye!"</p>
+        <div class="read" style="--c:var(--cad)">
+          <span class="tag">Read aloud</span>
+          Near the end of his life a cloud grew over Monet's eyes (cataracts) and stole his colours — reds turned muddy brown and the whole world went yellowish, like an old photo. The Light Chaser was losing the light! After an eye operation in 1923, the blues and greens came roaring back.
+        </div>
+      </div>
+    </div>
+
+    <div class="facts" style="--c:var(--cad)">
+      <ul>
+        <li>As a teenager in the seaside town of Le Havre, he drew funny <strong>caricatures</strong> of locals and sold them for pocket money — before he ever painted seriously.</li>
+        <li>A painter named Eugène Boudin dragged young Monet <strong>outdoors</strong> to paint real life instead of in a stuffy studio. He never forgot it.</li>
+        <li>His 1872 painting <em>Impression, Sunrise</em> accidentally <strong>gave the whole movement its name</strong> in 1874 — a critic used the title as an insult.</li>
+        <li>He was poor for years; creditors sometimes seized his paintings to pay his debts.</li>
+        <li>He spent his last 40 years in a garden he built himself at <strong>Giverny</strong>, digging a lily pond and building a green Japanese bridge — his garden became his favourite model.</li>
+        <li>"My garden is my most beautiful masterpiece," he liked to say.</li>
+      </ul>
+    </div>
+
+    <div class="gallery">
+      <figure class="zoomable" data-caption="Monet, Impression, Sunrise (1872) — zoom into the orange sun and the messy little strokes that named a movement">
+        <div class="frame"><span class="zoomhint">tap to zoom</span>
+          <img src="images/monet-impression-sunrise.jpg" alt="Monet, Impression, Sunrise" loading="lazy" onerror="imgFail(this)">
+          <div class="dl-note">Run <b>&nbsp;download_art&nbsp;</b> to load this image.</div>
+        </div>
+        <figcaption>Impression, Sunrise (1872) — the painting that named Impressionism</figcaption>
+      </figure>
+      <figure class="zoomable" data-caption="Monet, Woman with a Parasol (1875) — feel the wind: her scarf and the grass blow sideways. Find little Jean half-hidden behind the hill.">
+        <div class="frame"><span class="zoomhint">tap to zoom</span>
+          <img src="images/monet-woman-with-a-parasol.jpg" alt="Monet, Woman with a Parasol" loading="lazy" onerror="imgFail(this)">
+          <div class="dl-note">Run <b>&nbsp;download_art&nbsp;</b> to load this image.</div>
+        </div>
+        <figcaption>Woman with a Parasol (1875) — find little Jean behind the hill, and which way the wind blows</figcaption>
+      </figure>
+      <figure class="zoomable" data-caption="Monet, Water Lilies (c. 1916) — get close and the picture melts into pure blobs of colour">
+        <div class="frame"><span class="zoomhint">tap to zoom</span>
+          <img src="images/monet-water-lilies.jpg" alt="Monet, Water Lilies" loading="lazy" onerror="imgFail(this)">
+          <div class="dl-note">Run <b>&nbsp;download_art&nbsp;</b> to load this image.</div>
+        </div>
+        <figcaption>Water Lilies (c. 1916) — his pond at Giverny, painted as pure light</figcaption>
+      </figure>
+      <figure class="zoomable" data-caption="Monet, Rouen Cathedral (1894) — he painted this same church more than 30 times to catch the changing light">
+        <div class="frame"><span class="zoomhint">tap to zoom</span>
+          <img src="images/monet-rouen-cathedral.jpg" alt="Monet, Rouen Cathedral" loading="lazy" onerror="imgFail(this)">
+          <div class="dl-note">Run <b>&nbsp;download_art&nbsp;</b> to load this image.</div>
+        </div>
+        <figcaption>Rouen Cathedral (1894) — painted more than 30 times</figcaption>
+      </figure>
+      <figure class="zoomable" data-caption="Monet, Gare Saint-Lazare (1877) — even smoke and steam fascinated him; watch the gray puffs melt into the glass roof">
+        <div class="frame"><span class="zoomhint">tap to zoom</span>
+          <img src="images/monet-gare-saint-lazare.jpg" alt="Monet, Gare Saint-Lazare" loading="lazy" onerror="imgFail(this)">
+          <div class="dl-note">Run <b>&nbsp;download_art&nbsp;</b> to load this image.</div>
+        </div>
+        <figcaption>Gare Saint-Lazare (1877) — painting smoke, steam and light</figcaption>
+      </figure>
+    </div>
+
+    <div class="btns">
+      <a class="btn alt" href="https://www.musee-orangerie.fr/en" target="_blank" rel="noopener">Monet's Water Lilies at the Orangerie <span class="net">net</span></a>
+      <a class="btn alt" href="https://claudemonetgiverny.fr/en/" target="_blank" rel="noopener">His garden at Giverny <span class="net">net</span></a>
+    </div>
+  </div>
+</section>
+
+<!-- PAINTER GALLERY · VAN GOGH -->
+<section class="band band--night" id="vangogh">
+  <div class="wrap">
+    <p class="eyebrow" style="--c:var(--vermilion)"><span class="step">★</span> Painter up close · The Heart on Fire</p>
+    <div class="split flip">
+      <figure class="zoomable portrait" data-caption="Vincent van Gogh — self-portrait. He painted his own face dozens of times.">
+        <div class="frame"><span class="zoomhint">tap to zoom</span>
+          <img src="images/vangogh-self-portrait.jpg" alt="Van Gogh self-portrait" loading="lazy" onerror="imgFail(this)">
+          <div class="dl-note">Run <b>&nbsp;download_art&nbsp;</b> to load this image.</div>
+        </div>
+        <figcaption>Vincent van Gogh, <em>self-portrait</em></figcaption>
+      </figure>
+      <div>
+        <h2>Vincent van Gogh</h2>
+        <p class="epithet">He painted feelings, not facts.</p>
+        <p class="lede">Van Gogh painted like his hair was on fire. In about <strong>ten years</strong> he made roughly <strong>2,100 artworks</strong> — squeezing paint straight from the tube and slathering it on so thick you can still see the bumps today. He loved the colour <mark>yellow</mark>, painted sunflowers and starry skies, and wrote hundreds of letters to his brother Theo, who believed in him when almost nobody else did.</p>
+        <div class="read" style="--c:var(--vermilion)">
+          <span class="tag">Read aloud</span>
+          He was so poor he couldn't pay people to model for him — so he painted his own face over and over, around 35 times, using just a mirror. When he finished a painting he loved, he'd mail a little sketch of it to Theo inside a letter, almost like texting a photo today.
+        </div>
+      </div>
+    </div>
+
+    <div class="facts" style="--c:var(--vermilion)">
+      <ul>
+        <li>He sometimes finished a whole painting in a <strong>single day</strong> — and most of his most famous works came in just his last two years.</li>
+        <li>He <strong>sold barely any paintings</strong> while he was alive. Fame only came after he died.</li>
+        <li>About <strong>820 of his letters survive</strong> — more than 650 of them written to his brother Theo, who sent him money and paint for years.</li>
+        <li>He didn't start painting seriously until he was about <strong>27</strong> — after flopping as an art dealer and failing to become a preacher.</li>
+        <li>He loaded his brush with thick paint straight from the tube (a style called <strong>impasto</strong>), so the surface looks bumpy and 3-D up close.</li>
+        <li>His brain and feelings made life very hard for him, the way an illness makes your body sick. During one bad spell in 1888 he hurt his own ear. In 1889 he was brave enough to check himself into a hospital to get help — and he kept right on painting there, making some of his greatest works of all.</li>
+      </ul>
+    </div>
+
+    <div class="gallery">
+      <figure class="zoomable" data-caption="Van Gogh, Sunflowers (1888) — zoom into the petals and see the paint stand up off the canvas in thick ridges">
+        <div class="frame"><span class="zoomhint">tap to zoom</span>
+          <img src="images/vangogh-sunflowers.jpg" alt="Van Gogh, Sunflowers" loading="lazy" onerror="imgFail(this)">
+          <div class="dl-note">Run <b>&nbsp;download_art&nbsp;</b> to load this image.</div>
+        </div>
+        <figcaption>Sunflowers (1888) — thick, gloopy ridges of yellow</figcaption>
+      </figure>
+      <figure class="zoomable" data-caption="Van Gogh, The Bedroom (1888) — his real bedroom in the Yellow House; notice the floor tilts and the walls lean">
+        <div class="frame"><span class="zoomhint">tap to zoom</span>
+          <img src="images/vangogh-bedroom.jpg" alt="Van Gogh, The Bedroom" loading="lazy" onerror="imgFail(this)">
+          <div class="dl-note">Run <b>&nbsp;download_art&nbsp;</b> to load this image.</div>
+        </div>
+        <figcaption>The Bedroom (1888) — his own room in Arles</figcaption>
+      </figure>
+      <figure class="zoomable" data-caption="Van Gogh, Café Terrace at Night (1888) — painted with no black at all, just glowing lamplight against deep blue">
+        <div class="frame"><span class="zoomhint">tap to zoom</span>
+          <img src="images/vangogh-cafe-terrace-night.jpg" alt="Van Gogh, Café Terrace at Night" loading="lazy" onerror="imgFail(this)">
+          <div class="dl-note">Run <b>&nbsp;download_art&nbsp;</b> to load this image.</div>
+        </div>
+        <figcaption>Café Terrace at Night (1888) — painted with NO black at all; hunt for one dot of true black</figcaption>
+      </figure>
+      <figure class="zoomable" data-caption="Van Gogh, Irises (1889) — painted in a hospital garden; find the one lonely white iris among the blue ones">
+        <div class="frame"><span class="zoomhint">tap to zoom</span>
+          <img src="images/vangogh-irises.jpg" alt="Van Gogh, Irises" loading="lazy" onerror="imgFail(this)">
+          <div class="dl-note">Run <b>&nbsp;download_art&nbsp;</b> to load this image.</div>
+        </div>
+        <figcaption>Irises (1889) — find the single white iris</figcaption>
+      </figure>
+      <figure class="zoomable" data-caption="Van Gogh, Starry Night Over the Rhône (1888) — the river version; the town's gaslights drip like golden ribbons on the water">
+        <div class="frame"><span class="zoomhint">tap to zoom</span>
+          <img src="images/vangogh-starry-night-rhone.jpg" alt="Van Gogh, Starry Night Over the Rhône" loading="lazy" onerror="imgFail(this)">
+          <div class="dl-note">Run <b>&nbsp;download_art&nbsp;</b> to load this image.</div>
+        </div>
+        <figcaption>Starry Night Over the Rhône (1888) — the other starry night</figcaption>
+      </figure>
+    </div>
+
+    <div class="btns">
+      <a class="btn alt" href="https://www.vangoghmuseum.nl/en" target="_blank" rel="noopener">Van Gogh Museum, Amsterdam <span class="net">net</span></a>
+      <a class="btn alt" href="https://vangoghletters.org/" target="_blank" rel="noopener">Read his real letters to Theo <span class="net">net</span></a>
+    </div>
+  </div>
+</section>
+
+<!-- PAINTER GALLERY · SEURAT -->
+<section class="band band--paper" id="seurat">
+  <div class="wrap">
+    <p class="eyebrow" style="--c:var(--viridian)"><span class="step">★</span> Painter up close · The Dot Scientist</p>
+    <div class="split">
+      <figure class="zoomable portrait" data-caption="Georges Seurat — photographed in 1888">
+        <div class="frame"><span class="zoomhint">tap to zoom</span>
+          <img src="images/seurat-portrait.jpg" alt="Georges Seurat, 1888 photograph" loading="lazy" onerror="imgFail(this)">
+          <div class="dl-note">Run <b>&nbsp;download_art&nbsp;</b> to load this image.</div>
+        </div>
+        <figcaption>Georges Seurat, photographed in 1888</figcaption>
+      </figure>
+      <div>
+        <h2>Georges Seurat</h2>
+        <p class="epithet">He painted with science instead of a palette.</p>
+        <p class="lede">Seurat looked at a blank canvas the way a scientist looks at an experiment. Instead of mixing colours on a palette, he covered his paintings with millions of tiny separate <mark>dots</mark> of pure colour (blue right next to yellow, red next to green), and let your <em>eyes</em> do the mixing from a few steps back. Up close: a blizzard of coloured specks. Step back: shimmering sunlight, water and crowds — built from nothing but dots.</p>
+        <div class="read" style="--c:var(--viridian)">
+          <span class="tag">Read aloud</span>
+          Seurat was famously secretive. His closest artist friends had no idea he had a girlfriend <em>and</em> a baby boy — they only found out he had a secret family <em>after</em> he suddenly got sick and died, very young, at just 31. The biggest secret-keeper in art kept his happiest secret right to the end.
+        </div>
+      </div>
+    </div>
+
+    <div class="facts" style="--c:var(--viridian)">
+      <ul>
+        <li>He painted with thousands of tiny dots of pure colour placed side by side — people call it <strong>Pointillism</strong> (Seurat preferred "Divisionism").</li>
+        <li>The mixing happens in your <strong>eyeballs</strong>, not on the canvas: two dots far away blend into one brighter colour, the same trick a phone or TV screen uses.</li>
+        <li>He read actual <strong>science books</strong> about colour and light, then painted like a lab experiment — no guessing, all rules.</li>
+        <li>His giant <em>A Sunday on La Grande Jatte</em> took about <strong>two years</strong> and around 60 practice studies; the canvas is about <strong>10 feet (3 m) wide</strong>.</li>
+        <li>He sometimes painted a <strong>dotted border</strong> right onto the canvas, so the picture met the frame in his own colours.</li>
+        <li>He died very young and very suddenly at <strong>31</strong>; doctors were never sure what illness killed him. His last painting, <em>The Circus</em>, was left unfinished.</li>
+      </ul>
+    </div>
+
+    <div class="gallery">
+      <figure class="zoomable" data-caption="Seurat, Bathers at Asnières (1884) — workers cooling off by the river; spot the flecks of colour he dabbed into the grass and water">
+        <div class="frame"><span class="zoomhint">tap to zoom</span>
+          <img src="images/seurat-bathers.jpg" alt="Seurat, Bathers at Asnières" loading="lazy" onerror="imgFail(this)">
+          <div class="dl-note">Run <b>&nbsp;download_art&nbsp;</b> to load this image.</div>
+        </div>
+        <figcaption>Bathers at Asnières (1884)</figcaption>
+      </figure>
+      <figure class="zoomable" data-caption="Seurat, Le Chahut (1889–90) — a high-kicking cabaret dance; zoom way in and it all breaks into thousands of dots">
+        <div class="frame"><span class="zoomhint">tap to zoom</span>
+          <img src="images/seurat-le-chahut.jpg" alt="Seurat, Le Chahut" loading="lazy" onerror="imgFail(this)">
+          <div class="dl-note">Run <b>&nbsp;download_art&nbsp;</b> to load this image.</div>
+        </div>
+        <figcaption>Le Chahut (1889–90) — a dance made of dots</figcaption>
+      </figure>
+      <figure class="zoomable" data-caption="Seurat, The Circus (1891) — his very last painting, left unfinished when he died; zoom in to see the dots">
+        <div class="frame"><span class="zoomhint">tap to zoom</span>
+          <img src="images/seurat-the-circus.jpg" alt="Seurat, The Circus" loading="lazy" onerror="imgFail(this)">
+          <div class="dl-note">Run <b>&nbsp;download_art&nbsp;</b> to load this image.</div>
+        </div>
+        <figcaption>The Circus (1891) — zoom into the white horse: every bit is tiny dots</figcaption>
+      </figure>
+      <figure class="zoomable" data-caption="Seurat, Models / Les Poseuses (1886–88) — look in the back-left: his own Grande Jatte hangs on the wall, a painting inside a painting!">
+        <div class="frame"><span class="zoomhint">tap to zoom</span>
+          <img src="images/seurat-models.jpg" alt="Seurat, Models (Les Poseuses)" loading="lazy" onerror="imgFail(this)">
+          <div class="dl-note">Run <b>&nbsp;download_art&nbsp;</b> to load this image.</div>
+        </div>
+        <figcaption>Models / Les Poseuses (1886–88) — a painting inside a painting</figcaption>
+      </figure>
+      <figure class="zoomable" data-caption="Seurat, Port-en-Bessin (1888) — a calm harbour in dots of blue and sand; even the painted border is made of dots">
+        <div class="frame"><span class="zoomhint">tap to zoom</span>
+          <img src="images/seurat-port-en-bessin.jpg" alt="Seurat, Port-en-Bessin" loading="lazy" onerror="imgFail(this)">
+          <div class="dl-note">Run <b>&nbsp;download_art&nbsp;</b> to load this image.</div>
+        </div>
+        <figcaption>Port-en-Bessin (1888) — even the border is dotted</figcaption>
+      </figure>
+    </div>
+
+    <div class="btns">
+      <a class="btn alt" href="https://www.artic.edu/artworks/27992/a-sunday-on-la-grande-jatte-1884" target="_blank" rel="noopener">La Grande Jatte at the Art Institute <span class="net">net</span></a>
+      <a class="btn alt" href="https://www.nationalgallery.org.uk/paintings/georges-seurat-bathers-at-asnieres" target="_blank" rel="noopener">Bathers at the National Gallery <span class="net">net</span></a>
+    </div>
+  </div>
+</section>
+
+<!-- PAINTER GALLERY · DEGAS -->
+<section class="band band--paper2" id="degas">
+  <div class="wrap">
+    <p class="eyebrow" style="--c:var(--cerulean)"><span class="step">★</span> Painter up close · The Grumpy Spy</p>
+    <div class="split flip">
+      <figure class="zoomable portrait" data-caption="Edgar Degas — self-portrait in red chalk, around 1855">
+        <div class="frame"><span class="zoomhint">tap to zoom</span>
+          <img src="images/degas-self-portrait.jpg" alt="Edgar Degas self-portrait" loading="lazy" onerror="imgFail(this)">
+          <div class="dl-note">Run <b>&nbsp;download_art&nbsp;</b> to load this image.</div>
+        </div>
+        <figcaption>Edgar Degas, <em>self-portrait</em> in red chalk (c. 1855)</figcaption>
+      </figure>
+      <div>
+        <h2>Edgar Degas</h2>
+        <p class="epithet">The painter who watched when no one was looking.</p>
+        <p class="lede">Degas (say it <em>"day-GAH"</em>) loved to watch people when they weren't looking. Instead of kings or perfect princesses, he drew ballet dancers <mark>yawning, scratching and tying their shoes</mark>, and racehorses fidgeting before a race. He wanted his pictures to feel like peeking through a keyhole at a real, in-between moment.</p>
+        <div class="read" style="--c:var(--cerulean)">
+          <span class="tag">Read aloud</span>
+          Degas said his "snapshot" moments weren't lucky accidents at all: <span class="say">"No art was ever less spontaneous than mine."</span> He reworked the same scene again and again until it looked perfectly natural — a picture, he said, should look "as if you looked through a key-hole."
+        </div>
+      </div>
+    </div>
+
+    <div class="facts" style="--c:var(--cerulean)">
+      <ul>
+        <li>He loved <strong>unposed, in-between moments</strong> (dancers stretching, resting, fixing a shoe) instead of grand poses.</li>
+        <li>He was famous for <strong>ballet dancers</strong> and made hundreds of works of them over his life.</li>
+        <li>He <strong>hated the word "Impressionist"</strong> and called himself a "Realist" — even though he helped organise the Impressionist shows.</li>
+        <li>He didn't paint outdoors; he worked from <strong>memory and sketches</strong> in his studio and reworked things many times.</li>
+        <li>As his <strong>eyesight failed</strong>, he switched to bold, soft pastels and to sculpture he could feel with his hands. He was also a keen photographer.</li>
+        <li>His wax statue <em>The Little Fourteen-Year-Old Dancer</em>, dressed in a <strong>real cloth tutu</strong>, shocked visitors in 1881 — the only sculpture he showed publicly in his lifetime.</li>
+      </ul>
+    </div>
+
+    <div class="gallery">
+      <figure class="zoomable" data-caption="Degas, The Ballet Class (1871–74) — nobody stands still and perfect; find the dancer fixing her shoe">
+        <div class="frame"><span class="zoomhint">tap to zoom</span>
+          <img src="images/degas-ballet-class.jpg" alt="Degas, The Ballet Class" loading="lazy" onerror="imgFail(this)">
+          <div class="dl-note">Run <b>&nbsp;download_art&nbsp;</b> to load this image.</div>
+        </div>
+        <figcaption>The Ballet Class (1871–74)</figcaption>
+      </figure>
+      <figure class="zoomable" data-caption="Degas, The Star (c. 1876–78) — zoom into the spotlight on the ballerina, then spot the shadowy man in the wings">
+        <div class="frame"><span class="zoomhint">tap to zoom</span>
+          <img src="images/degas-the-star.jpg" alt="Degas, The Star" loading="lazy" onerror="imgFail(this)">
+          <div class="dl-note">Run <b>&nbsp;download_art&nbsp;</b> to load this image.</div>
+        </div>
+        <figcaption>The Star (c. 1876–78) — a dancer in the spotlight</figcaption>
+      </figure>
+      <figure class="zoomable" data-caption="Degas, In a Café / L'Absinthe (1875–76) — two tired people staring at nothing; he painted real life, not a fairy tale">
+        <div class="frame"><span class="zoomhint">tap to zoom</span>
+          <img src="images/degas-labsinthe.jpg" alt="Degas, In a Café (L'Absinthe)" loading="lazy" onerror="imgFail(this)">
+          <div class="dl-note">Run <b>&nbsp;download_art&nbsp;</b> to load this image.</div>
+        </div>
+        <figcaption>In a Café / L'Absinthe (1875–76) — he makes you feel like you're spying from the next table</figcaption>
+      </figure>
+      <figure class="zoomable" data-caption="Degas, Before the Race (c. 1882–84) — jockeys and jumpy horses warming up; you can almost feel them about to bolt">
+        <div class="frame"><span class="zoomhint">tap to zoom</span>
+          <img src="images/degas-racehorses-longchamp.jpg" alt="Degas, Before the Race" loading="lazy" onerror="imgFail(this)">
+          <div class="dl-note">Run <b>&nbsp;download_art&nbsp;</b> to load this image.</div>
+        </div>
+        <figcaption>Before the Race (c. 1882–84) — horses and jockeys</figcaption>
+      </figure>
+      <figure class="zoomable" data-caption="Degas, The Little Fourteen-Year-Old Dancer — a bronze statue wearing a real cloth tutu; the wax original shocked people in 1881">
+        <div class="frame"><span class="zoomhint">tap to zoom</span>
+          <img src="images/degas-little-dancer.jpg" alt="Degas, The Little Fourteen-Year-Old Dancer" loading="lazy" onerror="imgFail(this)">
+          <div class="dl-note">Run <b>&nbsp;download_art&nbsp;</b> to load this image.</div>
+        </div>
+        <figcaption>The Little Fourteen-Year-Old Dancer — zoom on her face: proud, bored, or nervous?</figcaption>
+      </figure>
+    </div>
+
+    <div class="btns">
+      <a class="btn alt" href="https://www.musee-orsay.fr/en/ressources/artists-personalities-catalog/edgar-degas-10512" target="_blank" rel="noopener">Degas at the Musée d'Orsay <span class="net">net</span></a>
+      <a class="btn alt" href="https://www.metmuseum.org/essays/edgar-degas-1834-1917-painting-and-drawing" target="_blank" rel="noopener">Degas at the Met <span class="net">net</span></a>
+    </div>
+  </div>
+</section>
+
+<!-- 4 HAYSTACKS -->
+<section class="band band--gold" id="haystacks">
+  <div class="wrap">
+    <p class="eyebrow" style="--c:#9a6b1f"><span class="step">4</span> The big experiment</p>
+    <h2>Same haystack, 25 times</h2>
+    <p class="lede">Monet painted the <strong>same</strong> haystacks outside his house twenty-five times. Why?! Because he wasn't really painting hay — he was painting the <mark>light</mark>, and light never stops changing. These three are all real Monets from the Art Institute of Chicago.</p>
+    <div class="read" style="--c:#9a6b1f">
+      <span class="tag">Read aloud</span>
+      He worked on several canvases at once, swapping them as the sun moved. He complained: <span class="say">"The sun sets so fast I cannot follow it!"</span>
+    </div>
+
+    <div class="three">
+      <figure class="zoomable" data-caption="Monet, Stacks of Wheat (End of Summer), 1890/91 — warm, golden light. Zoom in for the brushwork.">
+        <div class="frame"><span class="zoomhint">tap to zoom</span>
+          <img src="images/haystack-end-of-summer.jpg" alt="Monet, Stacks of Wheat, End of Summer" loading="lazy" onerror="imgFail(this)">
+          <div class="dl-note">Run <b>&nbsp;download_art&nbsp;</b> to load this image.</div>
+        </div>
+        <figcaption>End of Summer — warm</figcaption>
+      </figure>
+      <figure class="zoomable" data-caption="Monet, Stack of Wheat (Snow Effect, Overcast Day), 1890/91 — cold, gray and quiet.">
+        <div class="frame"><span class="zoomhint">tap to zoom</span>
+          <img src="images/haystack-snow-overcast.jpg" alt="Monet, Stack of Wheat, Snow Effect Overcast Day" loading="lazy" onerror="imgFail(this)">
+          <div class="dl-note">Run <b>&nbsp;download_art&nbsp;</b> to load this image.</div>
+        </div>
+        <figcaption>Snow, overcast — cold</figcaption>
+      </figure>
+      <figure class="zoomable" data-caption="Monet, Stack of Wheat (Thaw, Sunset), 1890/91 — pink and orange fire.">
+        <div class="frame"><span class="zoomhint">tap to zoom</span>
+          <img src="images/haystack-thaw-sunset.jpg" alt="Monet, Stack of Wheat, Thaw Sunset" loading="lazy" onerror="imgFail(this)">
+          <div class="dl-note">Run <b>&nbsp;download_art&nbsp;</b> to load this image.</div>
+        </div>
+        <figcaption>Thaw, sunset — fiery</figcaption>
+      </figure>
+    </div>
+
+    <p style="margin-top:1.4rem"><strong>Ask the kids:</strong> Same hay — what's different? What time of day? What season? How does each one <em>feel</em>? Then tap one and zoom in: up close, the haystack isn't even yellow. It's browns, reds, and soft purples soaking up the light.</p>
+    <div class="btns">
+      <a class="btn alt" href="https://www.artic.edu/artworks/64818/stacks-of-wheat-end-of-summer" target="_blank" rel="noopener">End of Summer <span class="net">net</span></a>
+      <a class="btn alt" href="https://www.artic.edu/artworks/16560/stack-of-wheat-snow-effect-overcast-day" target="_blank" rel="noopener">Snow <span class="net">net</span></a>
+      <a class="btn alt" href="https://www.artic.edu/artworks/100191/stack-of-wheat-thaw-sunset" target="_blank" rel="noopener">Thaw, Sunset <span class="net">net</span></a>
+    </div>
+  </div>
+</section>
+
+<!-- 5 EVOLUTION -->
+<section class="band band--paper2" id="evolution">
+  <div class="wrap">
+    <p class="eyebrow" style="--c:var(--viridian)"><span class="step">5</span> How it grew</p>
+    <h2>From one idea to a whole staircase</h2>
+    <p class="lede">Impressionism wasn't one thing — it grew and split into new styles, each climbing higher.</p>
+    <div class="stairs">
+      <div class="stair" style="--c:#8a6d4a"><span class="n">1</span><div><b>Realism</b> — "Paint real life: peasants, not gods." The first crack in the wall.</div></div>
+      <div class="stair" style="--c:var(--cerulean)"><span class="n">2</span><div><b>Impressionism</b> — Catch the fleeting moment and the light. Quick strokes, bright color, painting outdoors.</div></div>
+      <div class="stair" style="--c:var(--cad)"><span class="n">3</span><div><b>The Series idea</b> — Monet's haystacks: paint one thing over and over to capture <em>time itself</em>.</div></div>
+      <div class="stair" style="--c:var(--viridian)"><span class="n">4</span><div><b>Pointillism</b> — Seurat makes it scientific: orderly dots instead of loose dabs.</div></div>
+      <div class="stair" style="--c:var(--vermilion)"><span class="n">5</span><div><b>Post-Impressionism</b> — Van Gogh &amp; friends use bright color for <em>feelings</em>. This leads straight to modern art.</div></div>
+    </div>
+    <p class="oneliner">paint real → paint light → paint time → paint dots → paint feelings</p>
+    <p style="text-align:center;max-width:none">A late haystack painting reportedly dazzled a young artist named <strong>Kandinsky</strong> in 1896 — who went on to invent fully abstract art. The torch kept passing.</p>
+  </div>
+</section>
+
+<!-- 6 COLOR -->
+<section class="band band--paper" id="color">
+  <div class="wrap">
+    <p class="eyebrow" style="--c:var(--vermilion)"><span class="step">6</span> The secret engine</p>
+    <h2>How color (and a metal tube) changed everything</h2>
+    <p class="lede">The rebels couldn't paint bright until science <em>invented</em> bright paint, and gave them a way to carry it outside. Tap along the row below and watch the world go from the <strong>mud</strong> palette of earlier centuries to a real <strong>rainbow</strong> of colours sold in tubes.</p>
+
+    <div class="cards" style="grid-template-columns:repeat(auto-fit,minmax(min(100%,260px),1fr))">
+      <figure class="zoomable" data-caption="THEN: a painter's palette around 1715 — for centuries palettes held mostly dull browns, ochres and black (self-portrait of Joseph Vivien)">
+        <div class="frame"><span class="zoomhint">tap to zoom</span>
+          <img src="images/old-palette-selfportrait.jpg" alt="Self-portrait of Joseph Vivien holding a palette, around 1715" loading="lazy" onerror="imgFail(this)">
+          <div class="dl-note">Run <b>&nbsp;download_art&nbsp;</b> to load this historical image.</div>
+        </div>
+        <figcaption><strong>Then:</strong> a palette of dull earth colours (c. 1715)</figcaption>
+      </figure>
+      <figure class="zoomable" data-caption="Lapis lazuli — the gemstone that natural ultramarine blue was ground from. For centuries it cost more than gold.">
+        <div class="frame"><span class="zoomhint">tap to zoom</span>
+          <img src="images/lapis-lazuli.jpg" alt="Raw lapis lazuli gemstone" loading="lazy" onerror="imgFail(this)">
+          <div class="dl-note">Run <b>&nbsp;download_art&nbsp;</b> to load this image.</div>
+        </div>
+        <figcaption><strong>Then:</strong> blue ground from a gem, costlier than gold</figcaption>
+      </figure>
+      <figure class="zoomable" data-caption="A real 1915 magazine advertisement for artists' oil colours in tubes — including cadmium yellow, one of the new pigments">
+        <div class="frame"><span class="zoomhint">tap to zoom</span>
+          <img src="images/oil-colors-ad-1915.jpg" alt="1915 advertisement for artists' oil colours in tubes" loading="lazy" onerror="imgFail(this)">
+          <div class="dl-note">Run <b>&nbsp;download_art&nbsp;</b> to load this historical image.</div>
+        </div>
+        <figcaption><strong>After:</strong> oil colours in tubes — a real 1915 advert</figcaption>
+      </figure>
+      <figure class="zoomable" data-caption="A real artist's palette loaded with bright modern colours — the kind of rainbow the Impressionists finally had">
+        <div class="frame"><span class="zoomhint">tap to zoom</span>
+          <img src="images/artist-palette.jpg" alt="A real artist's palette loaded with bright paint" loading="lazy" onerror="imgFail(this)">
+          <div class="dl-note">Run <b>&nbsp;download_art&nbsp;</b> to load this image.</div>
+        </div>
+        <figcaption><strong>After:</strong> a real palette of bright colours 🌈</figcaption>
+      </figure>
+    </div>
+
+    <div class="split" style="margin-top:2rem">
+      <div>
+        <h3>What actually changed</h3>
+        <ul>
+          <li><strong>Old palette = mud.</strong> Bright blue (ultramarine) once cost more than gold — it was ground from a gemstone!</li>
+          <li><strong>Chemistry exploded.</strong> Cobalt blue (~1802–07), cadmium yellow (~1820), viridian green (1838), cerulean blue (1860). The 1800s made more new colors than the previous 2,000 years combined.</li>
+          <li><strong>The metal paint tube (patented 1841)</strong> let artists carry paint outside and chase real sunlight. Before it, paint was squeezed from a <strong>pig's bladder</strong> you pricked with a tack — messy, and it dried out fast. Renoir is often quoted as saying that without the tube there would have been no Impressionism.</li>
+          <li>Pissarro bragged he had <em>banished</em> the old dull "earth" colors. Van Gogh loved the cheap new chrome yellow that makes <em>Starry Night</em> glow.</li>
+        </ul>
+      </div>
+      <div>
+        <h3>Zoom challenge</h3>
+        <p>Now tap the real <em>Starry Night</em> at the top, or any haystack, and zoom until it's just blobs of paint — then zoom out until it snaps back into a picture. That's investigating brushstrokes like a museum scientist.</p>
+        <div class="btns">
+          <a class="btn" href="https://artsandculture.google.com/project/gigapixels" target="_blank" rel="noopener">Even bigger: gigapixel scans <span class="net">needs internet</span></a>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- 7 PLAY -->
+<section class="band band--night" id="play">
+  <div class="wrap">
+    <p class="eyebrow" style="--c:var(--cerulean)"><span class="step">7</span> Your turn</p>
+    <h2>Which painter are you?</h2>
+    <div class="pick">
+      <div style="--c:var(--cad)"><b>Monet</b> You chase light and never sit still.</div>
+      <div style="--c:var(--vermilion)"><b>Van Gogh</b> You paint big feelings.</div>
+      <div style="--c:var(--viridian)"><b>Seurat</b> You love patterns, dots and rules.</div>
+      <div style="--c:var(--cerulean)"><b>Degas</b> You notice everything quietly.</div>
+      <div style="--c:var(--violet)"><b>Debussy</b> You make moods out of sound.</div>
+    </div>
+    <h3 style="margin-top:2rem">Make your own</h3>
+    <ul>
+      <li><strong>The two-tree challenge:</strong> paint the same tree twice — once "smooth like the Salon," once "how it feels."</li>
+      <li><strong>The Monet challenge:</strong> paint the same thing at two different times of day, like the haystacks.</li>
+      <li><strong>The Debussy challenge:</strong> play a song and scribble the colors and shapes you hear.</li>
+    </ul>
+    <div class="btns" style="margin-top:1.6rem"><a class="btn alt" href="#top">▲ Back to the palette</a></div>
+  </div>
+</section>
+
+</main>
+
+<footer class="foot">
+  Every picture here is a real, high-resolution museum scan or photograph — the famous paintings, four painter portraits, plus lapis lazuli, an 18th-century palette self-portrait, a real artist's palette, and a genuine 1915 advert for oil colours. All artworks are public domain (Wikimedia Commons / Art Institute of Chicago / Google Arts &amp; Culture / national galleries). Tap or select any picture to zoom into the brushstrokes.
+</footer>
+
+<div class="lightbox" id="lightbox" aria-hidden="true">
+  <div class="lb-bar">
+    <span class="lb-cap" id="zoomCap"></span>
+    <button class="lb-btn" id="zOut" aria-label="Zoom out">−</button>
+    <button class="lb-btn" id="zIn" aria-label="Zoom in">+</button>
+    <button class="lb-btn" id="zReset" aria-label="Reset zoom">⟳</button>
+    <button class="lb-btn" id="zClose" aria-label="Close">✕</button>
+  </div>
+  <div id="zoomPane"></div>
+  <div class="lb-hint">Touch: drag to move • pinch or double-tap to zoom • ✕ to close &nbsp;|&nbsp; Remote/keys: OK/Enter zooms • arrows pan • Back closes</div>
+</div>
+
+<button class="totop" id="toTopBtn" aria-label="Back to top"><i></i>Palette</button>
+
+<script>
+(function(){
+  "use strict";
+
+  /* image fallback when not downloaded yet */
+  window.imgFail=function(img){
+    img.style.display='none';
+    var n=img.parentNode.querySelector('.dl-note'); if(n)n.style.display='flex';
+    var fig=img.closest('figure.zoomable'); if(fig){fig.style.cursor='default';fig.dataset.dead='1';}
+  };
+
+  /* lightbox zoom / pan (image only) */
+  var lb=document.getElementById('lightbox'), pane=document.getElementById('zoomPane'),
+      cap=document.getElementById('zoomCap'), cur=null, home=null,
+      scale=1, tx=0, ty=0, pointers=new Map(), lastDist=0, lastTap=0;
+
+  function apply(){ pane.style.transform='translate('+tx+'px,'+ty+'px) scale('+scale+')'; }
+  function resetView(){ scale=1; tx=0; ty=0; apply(); }
+  function clamp(s){ return Math.min(24,Math.max(1,s)); }
+
+  function open(node,caption){
+    cur=node; home={p:node.parentNode,n:node.nextSibling};
+    pane.appendChild(node); cap.textContent=caption||''; resetView();
+    lb.classList.add('open'); lb.setAttribute('aria-hidden','false'); document.body.style.overflow='hidden';
+  }
+  function close(){
+    if(cur&&home) home.p.insertBefore(cur,home.n);
+    cur=null; home=null;
+    lb.classList.remove('open'); lb.setAttribute('aria-hidden','true'); document.body.style.overflow='';
+  }
+
+  document.querySelectorAll('figure.zoomable').forEach(function(fig){
+    fig.setAttribute('tabindex','0');           /* reachable by a Fire TV remote / keyboard */
+    fig.setAttribute('role','button');
+    function tryOpen(e){
+      if(fig.dataset.dead==='1') return;
+      if(e.target.closest('a')) return;
+      var node=fig.querySelector('img');
+      if(!node) return;
+      if(node.style.display==='none') return;
+      open(node,fig.dataset.caption);
+    }
+    fig.addEventListener('click',tryOpen);
+    fig.addEventListener('keydown',function(e){
+      if(e.key==='Enter'||e.key===' '){ e.preventDefault(); tryOpen(e); }
+    });
+  });
+
+  document.getElementById('zIn').onclick=function(){ scale=clamp(scale*1.4); apply(); };
+  document.getElementById('zOut').onclick=function(){ scale=clamp(scale/1.4); if(scale===1){tx=0;ty=0;} apply(); };
+  document.getElementById('zReset').onclick=resetView;
+  document.getElementById('zClose').onclick=close;
+  lb.addEventListener('click',function(e){ if(e.target===lb) close(); });
+  document.addEventListener('keydown',function(e){
+    if(!lb.classList.contains('open'))return;
+    var step=70;                                  /* pan distance per d-pad press */
+    switch(e.key){
+      case 'Escape': case 'Backspace': close(); break;
+      case '+': case '=': scale=clamp(scale*1.4); apply(); break;
+      case '-': scale=clamp(scale/1.4); if(scale===1){tx=0;ty=0;} apply(); break;
+      case 'Enter': case ' ': scale=scale>1?1:2.8; if(scale===1){tx=0;ty=0;} apply(); e.preventDefault(); break;
+      case '0': resetView(); break;
+      case 'ArrowLeft':  tx+=step; apply(); e.preventDefault(); break;
+      case 'ArrowRight': tx-=step; apply(); e.preventDefault(); break;
+      case 'ArrowUp':    ty+=step; apply(); e.preventDefault(); break;
+      case 'ArrowDown':  ty-=step; apply(); e.preventDefault(); break;
+    }
+  });
+  pane.addEventListener('wheel',function(e){ e.preventDefault(); scale=clamp(scale*(e.deltaY<0?1.15:1/1.15)); if(scale===1){tx=0;ty=0;} apply(); },{passive:false});
+  pane.addEventListener('pointerdown',function(e){
+    pane.setPointerCapture(e.pointerId); pointers.set(e.pointerId,{x:e.clientX,y:e.clientY});
+    var now=Date.now(); if(now-lastTap<300&&pointers.size===1){ scale=scale>1?1:2.8; if(scale===1){tx=0;ty=0;} apply(); } lastTap=now;
+  });
+  pane.addEventListener('pointermove',function(e){
+    if(!pointers.has(e.pointerId))return;
+    var prev=pointers.get(e.pointerId); pointers.set(e.pointerId,{x:e.clientX,y:e.clientY});
+    if(pointers.size===1){ tx+=e.clientX-prev.x; ty+=e.clientY-prev.y; apply(); }
+    else if(pointers.size===2){ var p=Array.from(pointers.values()); var d=Math.hypot(p[0].x-p[1].x,p[0].y-p[1].y); if(lastDist){ scale=clamp(scale*(d/lastDist)); apply(); } lastDist=d; }
+  });
+  function up(e){ pointers.delete(e.pointerId); if(pointers.size<2) lastDist=0; }
+  pane.addEventListener('pointerup',up); pane.addEventListener('pointercancel',up);
+
+  var btn=document.getElementById('toTopBtn');
+  function onScroll(){ var on=window.scrollY>400; btn.style.opacity=on?'1':'0'; btn.style.pointerEvents=on?'auto':'none'; }
+  btn.onclick=function(){ window.scrollTo({top:0,behavior:'smooth'}); };
+  window.addEventListener('scroll',onScroll,{passive:true}); onScroll();
+})();
+</script>
+</body>
+</html>

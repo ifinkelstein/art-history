@@ -1,0 +1,85 @@
+IMAGE SOURCES & LICENSES
+========================
+
+All seven paintings are in the PUBLIC DOMAIN (the artists died well over 95 years
+ago). The scans are hosted on Wikimedia Commons. The download scripts pull them
+through Wikimedia's official Special:FilePath endpoint, which returns a JPEG at a
+chosen width. If you ever need to fetch one by hand, open the Commons page and
+click "Original file" (or "Download").
+
+Each entry: local filename  <-  Commons file page  |  approx. original resolution
+
+
+starry-night.jpg
+  Vincent van Gogh, The Starry Night (1889), Museum of Modern Art
+  https://commons.wikimedia.org/wiki/File:Vincent_van_Gogh_-_Starry_Night_-_Google_Art_Project.jpg
+  Original ~4,331 x 3,346 px. (A 44,567 px monster scan also exists if you want it.)
+
+cabanel-birth-of-venus.jpg
+  Alexandre Cabanel, The Birth of Venus (1863), Musee d'Orsay
+  https://commons.wikimedia.org/wiki/File:1863_Alexandre_Cabanel_-_The_Birth_of_Venus.jpg
+  Original ~4,364 x 2,528 px.
+
+grande-jatte.jpg
+  Georges Seurat, A Sunday on La Grande Jatte (1884-86), Art Institute of Chicago
+  https://commons.wikimedia.org/wiki/File:Georges_Seurat_-_A_Sunday_on_La_Grande_Jatte_--_1884_-_Google_Art_Project.jpg
+  Original 30,000 x 19,970 px (218 MB). Script grabs a 4,000 px version by default.
+
+haystack-end-of-summer.jpg
+  Claude Monet, Stacks of Wheat (End of Summer), 1890/91, Art Institute of Chicago (1985.1103)
+  https://commons.wikimedia.org/wiki/File:Claude_Monet_-_Stacks_of_Wheat_(End_of_Summer)_-_1985.1103_-_Art_Institute_of_Chicago.jpg
+  Original ~3,000 x 1,778 px.
+
+haystack-snow-overcast.jpg
+  Claude Monet, Stack of Wheat (Snow Effect, Overcast Day), 1890/91, Art Institute of Chicago (1933.1155)
+  https://commons.wikimedia.org/wiki/File:Claude_Monet_-_Stack_of_Wheat_(Snow_Effect,_Overcast_Day)_-_1933.1155_-_Art_Institute_of_Chicago.jpg
+
+haystack-thaw-sunset.jpg
+  Claude Monet, Stack of Wheat (Thaw, Sunset), 1890/91, Art Institute of Chicago (1983.166)
+  https://commons.wikimedia.org/wiki/File:Claude_Monet_-_Stack_of_Wheat_(Thaw,_Sunset)_-_1983.166_-_Art_Institute_of_Chicago.jpg
+
+great-wave.jpg
+  Katsushika Hokusai, The Great Wave off Kanagawa (c. 1831)
+  https://commons.wikimedia.org/wiki/File:Katsushika_Hokusai_-_Thirty-Six_Views_of_Mount_Fuji-_The_Great_Wave_Off_the_Coast_of_Kanagawa_-_Google_Art_Project.jpg
+  Original ~4,242 x 2,915 px.  PUBLIC DOMAIN.
+
+
+REAL OBJECT / HISTORICAL PHOTOS (these replaced the old hand-drawn diagrams)
+---------------------------------------------------------------------------
+The presentation no longer contains any drawings or SVGs — every visual is a real
+photograph. The 1915 advertisement and the 1715 self-portrait are public domain.
+The mineral and palette photos are freely licensed on Commons (typically CC-BY or
+CC-BY-SA) — open the file page and read the author / licence box before any PUBLIC
+redistribution. For private classroom display you are fine.
+
+old-palette-selfportrait.jpg
+  Self-portrait of Joseph Vivien with a palette, c. 1715 — stands in for the old
+  "mud" palette of dull earth colours used before the 19th century. PUBLIC DOMAIN.
+  https://commons.wikimedia.org/wiki/File:Self-portrait_of_Joseph_Vivien_with_Palette,_ca._1715.jpg
+
+lapis-lazuli.jpg
+  Raw lapis lazuli — the gemstone natural ultramarine blue was ground from.
+  https://commons.wikimedia.org/wiki/File:Lump_of_raw_lapis_lazuli.jpg
+
+artist-palette.jpg
+  A real artist's palette loaded with bright paint.
+  https://commons.wikimedia.org/wiki/File:Paintbrush_and_palette.JPG
+
+oil-colors-ad-1915.jpg
+  1915 magazine advertisement for F. W. Devoe & C. T. Raynolds Co. artists' oil
+  colours (incl. Cadmium Yellow), from The International Studio. PUBLIC DOMAIN.
+  Commons file (note the curly quotes in the exact name):
+  https://commons.wikimedia.org/wiki/File:%E2%80%9CF._W._Devoe_%26_C._T._Raynolds_Co.%E2%80%9D_%E2%80%9CArtists%E2%80%99_Oil_Colors%E2%80%9D_%E2%80%9CCADMIUM_YELLOW%E2%80%9D_September_1915_ad_-_The_International_studio_(IA_internationalst5622unse_0)_(page_14_crop).jpg
+  If the downloader can't fetch this one (its filename is fiddly), open
+  Category:Oil paint on Commons and grab any period oil-colour advert by hand.
+
+Note: the earlier pig's-bladder and dot-demo diagrams were removed. The pig's
+bladder is now mentioned in the lesson text instead, and Seurat's real La Grande
+Jatte already shows the pointillist dots when you zoom in.
+
+
+WANT EVEN MORE DETAIL?
+  - Run the downloader with a bigger width, e.g.  python3 download_art.py --width 6000
+  - Or open the Commons page above and grab the full original.
+  - The very biggest "gigapixel" zooming lives at Google Arts & Culture:
+    https://artsandculture.google.com/project/gigapixels

@@ -1,0 +1,8 @@
+# Build intermediate: downscaled image copies for the slim self-contained build.
+# Regenerate with the magick mogrify command in build_selfcontained_slim.py.
+images_slim/
+
+# macOS / Python cruft
+.DS_Store
+__pycache__/
+*.pyc
